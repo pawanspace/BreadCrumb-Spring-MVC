@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Class-Path: Web-Inf/lib/spring-core-3.1.2.RELEASE.jar Web-Inf/lib/spri
+ ng-asm-3.1.2.RELEASE.jar Web-Inf/lib/commons-logging-1.1.1.jar Web-In
+ f/lib/spring-expression-3.1.2.RELEASE.jar Web-Inf/lib/spring-beans-3.
+ 1.2.RELEASE.jar Web-Inf/lib/spring-aop-3.1.2.RELEASE.jar Web-Inf/lib/
+ aopalliance-1.0.jar Web-Inf/lib/spring-context-3.1.2.RELEASE.jar Web-
+ Inf/lib/spring-context-support-3.1.2.RELEASE.jar Web-Inf/lib/spring-j
+ ms-3.1.2.RELEASE.jar Web-Inf/lib/spring-tx-3.1.2.RELEASE.jar Web-Inf/
+ lib/spring-oxm-3.1.2.RELEASE.jar Web-Inf/lib/commons-lang-2.5.jar Web
+ -Inf/lib/spring-web-3.1.2.RELEASE.jar Web-Inf/lib/spring-webmvc-3.1.2
+ .RELEASE.jar Web-Inf/lib/jstl-1.2.jar
+Build-Jdk: 1.6.0_41
+Built-By: dummiesmind
+Created-By: Maven Integration for Eclipse
+
