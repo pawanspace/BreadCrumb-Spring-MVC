@@ -1,12 +1,12 @@
 This is a very simple implementation of using breadcrumb in Spring MVC. You should be using Spring 3.1.X or above. 
 For usage please look into the sample war file. Which contains everything you need to do.
 
-Still I will give some description:
-<code>
-@Link(label="Sample Link", family="controllerFamily");<br/>
-@RequestMapping(value = "sample.do", method=RequestMethod.GET);<br/>
-public ModelAndView sampleMethod(HttpSession session){...}<br/>
-</code>
+Still I will give some description:<br/>
+```java
+@Link(label="Sample Link", family="controllerFamily");                                                                  
+@RequestMapping(value = "sample.do", method=RequestMethod.GET);
+public ModelAndView sampleMethod(HttpSession session){...}
+```
 
 
 Link is the annotation which will generate breadcrumbs for you at interceptor level. 
