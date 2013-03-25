@@ -12,6 +12,6 @@ public ModelAndView sampleMethod(HttpSession session){...}
 Link is the annotation which will generate breadcrumbs for you at interceptor level. 
 
 <b>label: </b> attribute is the label you want to display for the Link<br/>
-<b>family:</b> attribute is to define the group in which this link will fall.
+<b>family:</b> attribute is to define the group in which this link will fall.<br/>
 <b>parent:</b> attribute defines the parent of current page 
 
