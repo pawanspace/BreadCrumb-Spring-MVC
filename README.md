@@ -3,7 +3,7 @@ For usage please look into the sample war file. Which contains everything you ne
 
 Still I will give some description:<br/>
 ```java
-@Link(label="Sample Link", family="controllerFamily");                                                                  
+@Link(label="Sample Link", family="controllerFamily", parent="");                                                                  
 @RequestMapping(value = "sample.do", method=RequestMethod.GET);
 public ModelAndView sampleMethod(HttpSession session){...}
 ```
@@ -13,5 +13,5 @@ Link is the annotation which will generate breadcrumbs for you at interceptor le
 
 <b>label: </b> attribute is the label you want to display for the Link<br/>
 <b>family:</b> attribute is to define the group in which this link will fall.
-
+<b>parent:</b> attribute defines the parent of current page 
 
