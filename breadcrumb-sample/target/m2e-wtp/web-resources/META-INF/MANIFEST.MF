@@ -9,7 +9,7 @@ Class-Path: Web-Inf/lib/spring-core-3.1.2.RELEASE.jar Web-Inf/lib/spri
  lib/spring-oxm-3.1.2.RELEASE.jar Web-Inf/lib/commons-lang-2.5.jar Web
  -Inf/lib/spring-web-3.1.2.RELEASE.jar Web-Inf/lib/spring-webmvc-3.1.2
  .RELEASE.jar Web-Inf/lib/jstl-1.2.jar
-Build-Jdk: 1.6.0_41
+Build-Jdk: 1.6.0_43
 Built-By: dummiesmind
 Created-By: Maven Integration for Eclipse
 

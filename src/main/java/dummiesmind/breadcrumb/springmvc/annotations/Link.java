@@ -8,5 +8,6 @@ public @interface Link {
 
 	public String label();
 	public String family();
+	public String parent();
 	
 }

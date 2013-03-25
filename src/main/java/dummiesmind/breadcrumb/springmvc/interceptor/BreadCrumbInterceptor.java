@@ -18,6 +18,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import dummiesmind.breadcrumb.springmvc.annotations.Link;
 import dummiesmind.breadcrumb.springmvc.breadcrumb.BreadCrumbLink;
 
+
+
 public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 	private static final String BREAD_CRUMB = "breadCrumb";
@@ -28,7 +30,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 	
 		Annotation[] declaredAnnotations = getDeclaredAnnotationsForHandler(handler);
 		HttpSession session = request.getSession();
-		
+		emptyCurrentBreadCrumb(session);
 		for (Annotation annotation : declaredAnnotations) {
 			if(annotation.annotationType().equals(Link.class)){
 				processAnnotation(request, session, annotation);
@@ -39,10 +41,14 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 	}
 
 
+	private void emptyCurrentBreadCrumb(HttpSession session) {
+		session.setAttribute("currentBreadCrumb", new LinkedList<BreadCrumbLink>());
+	}
+
+
 	private void processAnnotation(HttpServletRequest request, HttpSession session, Annotation annotation) {
 		Link link = (Link) annotation;
 		String family = link.family();
-		String label = link.label();
 		
 		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = getBreadCrumbFromSession(session);
 		
@@ -60,25 +66,27 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 		}
 		
 		BreadCrumbLink breadCrumbLink = null;
-		breadCrumbLink = getBreadCrumbLink(request, family, label, familyMap);
+		breadCrumbLink = getBreadCrumbLink(request, link, familyMap);
 		LinkedList<BreadCrumbLink> currentBreadCrumb = new LinkedList<BreadCrumbLink>();
 		generateBreadCrumbsRecursively(breadCrumbLink,currentBreadCrumb);
 		session.setAttribute("currentBreadCrumb", currentBreadCrumb);
 	}
 
 
-	private BreadCrumbLink getBreadCrumbLink(HttpServletRequest request, String family, String label, LinkedHashMap<String, BreadCrumbLink> familyMap) {
+	private BreadCrumbLink getBreadCrumbLink(HttpServletRequest request, Link link,
+			LinkedHashMap<String, BreadCrumbLink> familyMap) {
 		BreadCrumbLink breadCrumbLink;
-		BreadCrumbLink breadCrumbObject = familyMap.get(label);
+		BreadCrumbLink breadCrumbObject = familyMap.get(link.label());
 		resetBreadCrumbs(familyMap);
 		if(breadCrumbObject != null){
 			breadCrumbObject.setCurrentPage(true);
 			breadCrumbLink = breadCrumbObject;
 		}else{
-			breadCrumbLink = new BreadCrumbLink(family, label, true);
-			breadCrumbLink.setUrl(request.getRequestURI());
+			breadCrumbLink = new BreadCrumbLink(link.family(), link.label(), true, link.parent());
+			String fullURL = request.getRequestURL().append("?").append(request.getQueryString()).toString();
+			breadCrumbLink.setUrl(fullURL);
 			createRelationships(familyMap, breadCrumbLink);
-			familyMap.put(label, breadCrumbLink);
+			familyMap.put(link.label(), breadCrumbLink);
 		}
 		return breadCrumbLink;
 	}
@@ -114,11 +122,10 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 	private void createRelationships(LinkedHashMap<String, BreadCrumbLink> familyMap , BreadCrumbLink newLink){
 		Collection<BreadCrumbLink> values = familyMap.values();
 		for (BreadCrumbLink breadCrumbLink : values) {
-			breadCrumbLink.setCurrentPage(false);
-			BreadCrumbLink next = breadCrumbLink.getNext();
-			if(next==null){
-				breadCrumbLink.setNext(newLink);
-				newLink.setPrevious(breadCrumbLink);
+			if(breadCrumbLink.getLabel().equalsIgnoreCase(newLink.getParentKey())){
+					breadCrumbLink.addNext(newLink);
+					newLink.setPrevious(breadCrumbLink);
+					newLink.setParent(breadCrumbLink);
 			}
 		}
 		

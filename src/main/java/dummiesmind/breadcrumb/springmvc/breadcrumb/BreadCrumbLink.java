@@ -1,18 +1,24 @@
 package dummiesmind.breadcrumb.springmvc.breadcrumb;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class BreadCrumbLink {
 
 	private BreadCrumbLink previous;
-	private BreadCrumbLink next;
+	private List<BreadCrumbLink> next = new LinkedList<BreadCrumbLink>();
 	private String url;
 	private String family;
 	private String label;
 	boolean currentPage;
+	private String parentKey;
+	private BreadCrumbLink parent;
 
-	public BreadCrumbLink(String family, String label, boolean currentPage) {
+	public BreadCrumbLink(String family, String label, boolean currentPage, String parentKey) {
 		this.family = family;
 		this.label = label;
 		this.currentPage = currentPage;
+		this.parentKey = parentKey;
 	}
 
 	public BreadCrumbLink getPrevious() {
@@ -23,12 +29,12 @@ public class BreadCrumbLink {
 		this.previous = previous;
 	}
 
-	public BreadCrumbLink getNext() {
+	public List<BreadCrumbLink> getNext() {
 		return next;
 	}
 
-	public void setNext(BreadCrumbLink next) {
-		this.next = next;
+	public void addNext(BreadCrumbLink next) {
+		this.next.add(next);
 	}
 
 	public String getUrl() {
@@ -61,6 +67,22 @@ public class BreadCrumbLink {
 
 	public void setCurrentPage(boolean currentPage) {
 		this.currentPage = currentPage;
+	}
+
+	public String getParentKey() {
+		return parentKey;
+	}
+
+	public void setParentKey(String parentKey) {
+		this.parentKey = parentKey;
+	}
+
+	public BreadCrumbLink getParent() {
+		return parent;
+	}
+
+	public void setParent(BreadCrumbLink parent) {
+		this.parent = parent;
 	}
 	
 	
