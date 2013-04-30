@@ -50,7 +50,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 		Link link = (Link) annotation;
 		String family = link.family();
 		
-		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = getBreadCrumbFromSession(session);
+		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = getBreadCrumbLinksFromSession(session);
 		
 		if(breadCrumb == null){
 			breadCrumb = new HashMap<String, LinkedHashMap<String,BreadCrumbLink>>();
@@ -93,7 +93,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 
 	@SuppressWarnings("unchecked")
-	private Map<String, LinkedHashMap<String, BreadCrumbLink>> getBreadCrumbFromSession(HttpSession session) {
+	private Map<String, LinkedHashMap<String, BreadCrumbLink>> getBreadCrumbLinksFromSession(HttpSession session) {
 		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = (Map<String, LinkedHashMap<String, BreadCrumbLink>>)session.getAttribute(BREAD_CRUMB);
 		return breadCrumb;
 	}
