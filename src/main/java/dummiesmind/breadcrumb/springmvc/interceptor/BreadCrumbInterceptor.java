@@ -22,7 +22,7 @@ import dummiesmind.breadcrumb.springmvc.breadcrumb.BreadCrumbLink;
 
 public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
-	private static final String BREAD_CRUMB = "breadCrumb";
+	private static final String BREAD_CRUMB_LINKS = "breadCrumb";
 
 
 	@Override
@@ -54,7 +54,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 		
 		if(breadCrumb == null){
 			breadCrumb = new HashMap<String, LinkedHashMap<String,BreadCrumbLink>>();
-			session.setAttribute(BREAD_CRUMB, breadCrumb);
+			session.setAttribute(BREAD_CRUMB_LINKS, breadCrumb);
 		}
 
 		LinkedHashMap<String, BreadCrumbLink> familyMap = breadCrumb.get(family);
