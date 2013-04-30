@@ -36,11 +36,11 @@ Let's see some code now to understand how Interceptors helped me to build a simp
 
 
 My idea was to build something like this:
-
+```java
   @Link(label="Sample Link", family="controllerFamily", parent="");                                                                  
   @RequestMapping(value = "sample.do", method=RequestMethod.GET);
   public ModelAndView sampleMethod(HttpSession session){...}
-
+```
 As you can see method needs to have an annotation Link which must have a 
 
 (1) Label: This is what will be displayed in the BreadCrumb, You can also give some key here and fetch value from the properties file using fmt tag in 			   JSP.
