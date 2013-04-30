@@ -27,52 +27,74 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-	
+
+		// Get declared annotations
 		Annotation[] declaredAnnotations = getDeclaredAnnotationsForHandler(handler);
 		HttpSession session = request.getSession();
+		/*
+		 * Remove reference to current BreadCrumb object from session. You can obviously do better than this. But for now it doesn't matter.
+		 */
 		emptyCurrentBreadCrumb(session);
+
+		//Loop through annotations to check if this handler qualifies for BreadCrumb or not.
 		for (Annotation annotation : declaredAnnotations) {
 			if(annotation.annotationType().equals(Link.class)){
+				//Process annotation in case it qualifies
 				processAnnotation(request, session, annotation);
 			}
 		}
-		
+
 		return true;
 	}
 
 
 	private void emptyCurrentBreadCrumb(HttpSession session) {
+		//Set empty object
 		session.setAttribute("currentBreadCrumb", new LinkedList<BreadCrumbLink>());
 	}
 
 
+	/*
+	 * Process Link annotation
+	 */
 	private void processAnnotation(HttpServletRequest request, HttpSession session, Annotation annotation) {
-		Link link = (Link) annotation;
-		String family = link.family();
-		
-		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = getBreadCrumbLinksFromSession(session);
-		
-		if(breadCrumb == null){
-			breadCrumb = new HashMap<String, LinkedHashMap<String,BreadCrumbLink>>();
-			session.setAttribute(BREAD_CRUMB_LINKS, breadCrumb);
+
+		Link link = (Link) annotation; //get annotation object
+		String family = link.family();  //get family (basically context of the request. Make sure this has nothing to do with PageContext)
+
+		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumbLinksByFamily = getBreadCrumbLinksFromSession(session); // Get BreadCrumbLink Objects by family
+
+
+		// If this is the first request and no breadCrumbLinks Exists make a new one and add to session.
+		if(breadCrumbLinksByFamily == null){
+			breadCrumbLinksByFamily = new HashMap<String, LinkedHashMap<String,BreadCrumbLink>>();
+			session.setAttribute(BREAD_CRUMB_LINKS, breadCrumbLinksByFamily);
 		}
 
-		LinkedHashMap<String, BreadCrumbLink> familyMap = breadCrumb.get(family);
-		
-		
+
+		// Get links by family
+		LinkedHashMap<String, BreadCrumbLink> familyMap = breadCrumbLinksByFamily.get(family);
+
+		//If family does not have any links in the current history. make a new one and add to the map.
 		if(familyMap == null){
 			familyMap = new LinkedHashMap<String, BreadCrumbLink>();
-			breadCrumb.put(family, familyMap);
+			breadCrumbLinksByFamily.put(family, familyMap);
 		}
-		
-		BreadCrumbLink breadCrumbLink = null;
-		breadCrumbLink = getBreadCrumbLink(request, link, familyMap);
+
+
+		//Create a breadCrumbLink. This contains all the information to display one link in the breadcrumb (contains url, label, next, previous links etc)
+		BreadCrumbLink breadCrumbLink = getBreadCrumbLink(request, link, familyMap);
+		//Create a new breadCrumb for display 
 		LinkedList<BreadCrumbLink> currentBreadCrumb = new LinkedList<BreadCrumbLink>();
+		//Generate breadcrumb for display recursively
 		generateBreadCrumbsRecursively(breadCrumbLink,currentBreadCrumb);
+
+		//Set breadcrumb in session
 		session.setAttribute("currentBreadCrumb", currentBreadCrumb);
 	}
 
 
+	//Generate BreadCrumbLink based on attributes in Link annotationa nd request Object.
 	private BreadCrumbLink getBreadCrumbLink(HttpServletRequest request, Link link,
 			LinkedHashMap<String, BreadCrumbLink> familyMap) {
 		BreadCrumbLink breadCrumbLink;
@@ -104,7 +126,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 		Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
 		return declaredAnnotations;
 	}
-	
+
 	private void resetBreadCrumbs(LinkedHashMap<String, BreadCrumbLink> familyMap) {
 		for(BreadCrumbLink breadCrumbLink : familyMap.values()){
 			breadCrumbLink.setCurrentPage(false);
@@ -117,8 +139,8 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 		}
 		 breadCrumbLinks.add(link);
 	}
-	
-	
+
+
 	private void createRelationships(LinkedHashMap<String, BreadCrumbLink> familyMap , BreadCrumbLink newLink){
 		Collection<BreadCrumbLink> values = familyMap.values();
 		for (BreadCrumbLink breadCrumbLink : values) {
@@ -128,7 +150,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 					newLink.setParent(breadCrumbLink);
 			}
 		}
-		
+
 	}
 
 }
