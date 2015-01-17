@@ -19,7 +19,9 @@ import dummiesmind.breadcrumb.springmvc.annotations.Link;
 import dummiesmind.breadcrumb.springmvc.breadcrumb.BreadCrumbLink;
 
 
-
+/*
+	This is the main interceptor class
+*/
 public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 	private static final String BREAD_CRUMB = "breadCrumb";

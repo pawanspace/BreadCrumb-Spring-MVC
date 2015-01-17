@@ -85,6 +85,4 @@ public class BreadCrumbLink {
 		this.parent = parent;
 	}
 	
-	
-
 }
