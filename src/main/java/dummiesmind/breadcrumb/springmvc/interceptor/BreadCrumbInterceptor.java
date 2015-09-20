@@ -85,7 +85,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 			breadCrumbLink = breadCrumbObject;
 		}else{
 			breadCrumbLink = new BreadCrumbLink(link.family(), link.label(), true, link.parent());
-			String fullURL = request.getRequestURL().append("?").append(request.getQueryString()).toString();
+			String fullURL = request.getRequestURL().append((request.getQueryString()==null)?"":"?"+request.getQueryString()).toString();
 			breadCrumbLink.setUrl(fullURL);
 			createRelationships(familyMap, breadCrumbLink);
 			familyMap.put(link.label(), breadCrumbLink);
@@ -96,7 +96,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 	@SuppressWarnings("unchecked")
 	private Map<String, LinkedHashMap<String, BreadCrumbLink>> getBreadCrumbLinksFromSession(HttpSession session) {
-		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = (Map<String, LinkedHashMap<String, BreadCrumbLink>>)session.getAttribute(BREAD_CRUMB);
+		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = (Map<String, LinkedHashMap<String, BreadCrumbLink>>)session.getAttribute(BREAD_CRUMB_LINKS);
 		return breadCrumb;
 	}
 
