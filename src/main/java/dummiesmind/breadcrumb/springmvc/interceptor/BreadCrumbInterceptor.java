@@ -29,13 +29,15 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-	
-		Annotation[] declaredAnnotations = getDeclaredAnnotationsForHandler(handler);
-		HttpSession session = request.getSession();
-		emptyCurrentBreadCrumb(session);
-		for (Annotation annotation : declaredAnnotations) {
-			if(annotation.annotationType().equals(Link.class)){
-				processAnnotation(request, session, annotation);
+
+		if (handler instanceof HandlerMethod) {
+			Annotation[] declaredAnnotations = getDeclaredAnnotationsForHandler(handler);
+			HttpSession session = request.getSession();
+			emptyCurrentBreadCrumb(session);
+			for (Annotation annotation : declaredAnnotations) {
+				if(annotation.annotationType().equals(Link.class)){
+					processAnnotation(request, session, annotation);
+				}
 			}
 		}
 		
@@ -67,7 +69,7 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 			breadCrumb.put(family, familyMap);
 		}
 		
-		BreadCrumbLink breadCrumbLink = null;
+		BreadCrumbLink breadCrumbLink;
 		breadCrumbLink = getBreadCrumbLink(request, link, familyMap);
 		LinkedList<BreadCrumbLink> currentBreadCrumb = new LinkedList<BreadCrumbLink>();
 		generateBreadCrumbsRecursively(breadCrumbLink,currentBreadCrumb);
@@ -96,15 +98,13 @@ public class BreadCrumbInterceptor extends HandlerInterceptorAdapter {
 
 	@SuppressWarnings("unchecked")
 	private Map<String, LinkedHashMap<String, BreadCrumbLink>> getBreadCrumbLinksFromSession(HttpSession session) {
-		Map<String, LinkedHashMap<String, BreadCrumbLink>> breadCrumb = (Map<String, LinkedHashMap<String, BreadCrumbLink>>)session.getAttribute(BREAD_CRUMB_LINKS);
-		return breadCrumb;
+        return (Map<String, LinkedHashMap<String, BreadCrumbLink>>)session.getAttribute(BREAD_CRUMB_LINKS);
 	}
 
 	private Annotation[] getDeclaredAnnotationsForHandler(Object handler) {
 		HandlerMethod handlerMethod = (HandlerMethod)handler;
 		Method method = handlerMethod.getMethod();
-		Annotation[] declaredAnnotations = method.getDeclaredAnnotations();
-		return declaredAnnotations;
+        return method.getDeclaredAnnotations();
 	}
 	
 	private void resetBreadCrumbs(LinkedHashMap<String, BreadCrumbLink> familyMap) {
