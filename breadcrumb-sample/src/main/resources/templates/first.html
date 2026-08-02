@@ -1,0 +1,4 @@
+<!doctype html><html lang="en" xmlns:th="https://www.thymeleaf.org"><head><title>First level</title></head><body>
+<nav th:replace="~{fragments :: breadcrumbs}"></nav><h1>First level</h1>
+<ul><li><a th:href="@{/first/second}">Second level</a></li><li><a th:href="@{/first/alternative}">Alternative second level</a></li></ul>
+</body></html>

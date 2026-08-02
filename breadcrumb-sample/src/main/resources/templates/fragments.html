@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<body>
+<nav th:fragment="breadcrumbs" aria-label="Breadcrumb">
+    <ol>
+        <li th:each="breadcrumb : ${breadcrumbs}">
+            <span th:if="${breadcrumb.currentPage}" th:text="${breadcrumb.label}"></span>
+            <a th:unless="${breadcrumb.currentPage}" th:href="${breadcrumb.url}" th:text="${breadcrumb.label}"></a>
+        </li>
+    </ol>
+</nav>
+</body>
+</html>
